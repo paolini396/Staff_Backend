@@ -151,9 +151,44 @@ namespace Staff_Backend.Services.StaffService
         }
 
 
-        Task<ServiceResponse<List<StaffModel>>> IStaffService.DeleteStaff(int Id)
+        async Task<ServiceResponse<List<StaffModel>>> IStaffService.DeleteStaff(int Id)
         {
-            throw new NotImplementedException();
+            ServiceResponse<List<StaffModel>> serviceResponse = new ServiceResponse<List<StaffModel>>();
+            serviceResponse.Data = new List<StaffModel>();
+
+            try
+            {
+                StaffModel StaffData = await _staffRepository.GetByIdAsync(Id);
+
+                if (StaffData == null)
+                {
+                    serviceResponse.Message = $"ID {Id} não encontrado.";
+                    serviceResponse.Success = false;
+
+                    return serviceResponse;
+                }
+
+                StaffModel StaffModelResult = await _staffRepository.DeleteAsync(StaffData);
+                
+                if (StaffModelResult == null)
+                {
+                    serviceResponse.Message = $"Ocorreu um erro ao deletar o {Id}.";
+                    serviceResponse.Success = false;
+
+                    return serviceResponse;
+                }
+
+                serviceResponse.Data.Add(StaffModelResult);
+                serviceResponse.Message = "Staff deletado com sucesso!";
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Message = ex.Message;
+                serviceResponse.Success = false;
+            }
+
+            return serviceResponse;
         }
 
      

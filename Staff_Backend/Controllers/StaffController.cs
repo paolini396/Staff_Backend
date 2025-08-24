@@ -40,6 +40,12 @@ namespace Staff_Backend.Controllers
             return Ok(await _staffService.UpdateStaff(StaffData));
         }
 
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<List<StaffModel>>>> Delete(int Id)
+        {
+            return Ok(await _staffService.DeleteStaff(Id));
+        }
+
         [HttpPut("Active")]
         public async Task<ActionResult<ServiceResponse<List<StaffModel>>>> ActiveOrInactive(int Id, bool Active)
         {
